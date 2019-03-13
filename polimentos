@@ -1,0 +1,30 @@
+Polimento I
+
+- verificar Flash no
+	* store
+	* update
+	* destroy
+	
+	Session::flash('message', ' *** com sucesso!');
+	return Redirect::to(' ***index*** ');
+	
+- verificar validations
+	* store
+	* update
+	
+	
+	$rules = array(
+				'nome' => 'required'
+		);
+	$validator = Validator::make(Input::all(), $rules);
+	
+	if ($validator->fails()) {
+			
+			return Redirect::to('***/create')
+			->withErrors($validator);
+			
+	} 
+	else 
+	{
+	
+	}

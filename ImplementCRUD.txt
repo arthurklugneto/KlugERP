@@ -1,0 +1,8 @@
+- Criar o Migration do Database definindo os parametros do objeto;
+- Criar o Model;
+- Criar o Controller;
+- Criar as rotas;
+- criar pasta dentro da view com as blades index,show,edit,create;
+- dentro do controller criar as funcoes de crud e adicionar os uses;
+- Criar as Views;
+- adicionar os atalhos no sidebar
