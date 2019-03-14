@@ -55,5 +55,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Services\ContaPagarService', function($app){
             return new \App\Services\ContaPagarService();
         });
+        $this->app->bind('App\Services\ContaReceberService', function($app){
+            return new \App\Services\ContaReceberService();
+        });
     }
 }
