@@ -7,17 +7,18 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use View;
-use App\Saida;
-use App\Entrada;
-use App\Estoque;
+use App\Services\RelatorioService;
 use Excel;
 
 class RelatorioController extends Controller
 {
     
-	public function __construct()
+    protected $relatorioService;
+
+	public function __construct(RelatorioService $relatorioService)
 	{
-		$this->middleware('auth');
+        $this->middleware('auth');
+        $this->relatorioService = $relatorioService;
 	}
 	
 	public function index()
@@ -37,10 +38,9 @@ class RelatorioController extends Controller
 				$dataInicial = Input::get('dataInicial').' 00:00:00';
 				$dataFinal = Input::get('dataFinal'). '23:59:59';
 					
-				$saidas = Saida::all()->where('dataVenda','>=',$dataInicial)->where('dataVenda','<=',$dataFinal);
+                $saidas = $this->relatorioService->generateRelatorioSaidas($dataInicial,$dataFinal);
 				
-				$arrayDados = array();
-				
+				$arrayDados = array();				
 								
 				foreach($saidas as $saida)
 				{
@@ -78,10 +78,9 @@ class RelatorioController extends Controller
 				$dataInicial = Input::get('dataInicial').' 00:00:00';
 				$dataFinal = Input::get('dataFinal'). '23:59:59';
 					
-				$entradas = Entrada::all()->where('dataCompra','>=',$dataInicial)->where('dataCompra','<=',$dataFinal);
+				$entradas = $this->relatorioService->generateRelatorioEntradas($dataInicial,$dataFinal);
 		
-				$arrayDados = array();
-		
+				$arrayDados = array();		
 		
 				foreach($entradas as $entrada)
 				{
@@ -116,7 +115,7 @@ class RelatorioController extends Controller
 			$excel->sheet('Entradas', function($sheet) {
 		
 					
-				$estoque = Estoque::all();
+				$estoque = $this->relatorioService->generateRelatorioEstoque();
 		
 				$arrayDados = array();
 		
