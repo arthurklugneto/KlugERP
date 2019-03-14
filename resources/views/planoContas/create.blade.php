@@ -32,7 +32,7 @@
 				
 				<div class="form-group">
 					{{ Form::label('margem', 'Margem de Dedução [%]') }} 
-					{{ Form::number('margem', Input::old('margem'), array('class'=>'form-control','step'=>'any')) }}
+					{{ Form::number('margem', 0, array('class'=>'form-control','step'=>'any','min'=>'0')) }}
 				</div>
 				
 				<div class="form-group">

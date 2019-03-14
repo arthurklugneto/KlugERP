@@ -24,7 +24,7 @@
                         <div class="col-md-3">
                             <div class="form-group">{{ Form::label('quantidade', 'Quantidade')
                                 }} {{ Form::number('quantidade', Input::old('quantidade'),
-                                array('class' =>'form-control')) }}</div>
+                                array('class' =>'form-control','min'=>'0')) }}</div>
                         </div>
 
                     </div>

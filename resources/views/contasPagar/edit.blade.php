@@ -24,7 +24,7 @@
                         <div class="col-md-6">
                             <div class="form-group">{{ Form::label('valorPagamento', 'Valor')
 							    }} {{ Form::number('valorPagamento', Input::old('valorPagamento'),
-							    array('class' =>'form-control','step'=>'any')) }}</div>
+							    array('class' =>'form-control','step'=>'any','min'=>'0')) }}</div>
                         </div>
                     </div>
                     {{ Form::submit('Adicionar Pagamento', array('class' => 'btn
