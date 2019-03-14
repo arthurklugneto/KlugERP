@@ -26,7 +26,7 @@
 
 					<div class="form-group">
 					{{ Form::label('codigo', 'Código') }} 
-					{{ Form::number('codigo',$proximoCodigo, array('class' =>'form-control')) }}
+					{{ Form::number('codigo',$proximoCodigo, array('class' =>'form-control','min'=>'1')) }}
 					</div>
 					
 					<div class="form-group">
@@ -41,17 +41,17 @@
 					
 					<div class="form-group">
 					{{ Form::label('precoCusto', 'Preço de Custo') }} 
-					{{ Form::number('precoCusto', Input::old('precoCusto'), array('class'	=>'form-control','step'=>'any')) }}
+					{{ Form::number('precoCusto', 0, array('class'	=>'form-control','step'=>'any','min'=>'0')) }}
 					</div>
 					
 					<div class="form-group">
 					{{ Form::label('precoVenda', 'Preço de Venda') }} 
-					{{ Form::number('precoVenda', Input::old('precoVenda'), array('class'	=>'form-control','step'=>'any')) }}
+					{{ Form::number('precoVenda', 0, array('class'=>'form-control','step'=>'any','min'=>'0')) }}
 					</div>
 					
 					<div class="form-group">
 					{{ Form::label('margem', 'Margem de Lucro') }} 
-					{{ Form::number('margem', Input::old('margem'), array('class'	=>'form-control','step'=>'any')) }}
+					{{ Form::number('margem', 0, array('class'	=>'form-control','step'=>'any','min'=>'0')) }}
 					</div>
 					
 					<div class="form-group">

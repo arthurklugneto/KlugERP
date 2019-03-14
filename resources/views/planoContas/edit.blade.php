@@ -31,7 +31,7 @@
 
 				<div class="form-group">{{ Form::label('margem', 'Margem de Dedução
 					[%]') }} {{ Form::number('margem', Input::old('margem'),
-					array('class'=>'form-control','step'=>'any')) }}</div>
+					array('class'=>'form-control','step'=>'any','min'=>'0')) }}</div>
 
 				<div class="form-group">{{ Form::label('tipo', 'Tipo') }} {{
 					Form::select('tipo', array('receita' => 'Receitas', 'despesa' =>

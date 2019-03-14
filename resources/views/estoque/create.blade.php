@@ -56,7 +56,7 @@
 					<div class="col-md-4">
 						<div class="form-group">{{ Form::label('quantidade', 'Quantidade')
 							}} {{ Form::number('quantidade', Input::old('quantidade'),
-							array('class'=>'form-control m-input')) }}</div>
+							array('class'=>'form-control m-input','min'=>'0')) }}</div>
 					</div>
 				</div>
 				{{ Form::submit('Movimentar', array('class' => 'btn btn-primary'))

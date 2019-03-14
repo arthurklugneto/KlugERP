@@ -66,18 +66,18 @@
                         <div class="col-md-4">
                             <div class="form-group">{{ Form::label('valorOriginal', 'Valor
                                 Original')}} {{ Form::number('valorOriginal',
-                                Input::old('valorOriginal'), array('class' =>'form-control','step'=>'any')) }}
+                                0, array('class' =>'form-control','step'=>'any','min'=>'0')) }}
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">{{ Form::label('valorLiquido', 'Valor
                                 Líquido')}} {{ Form::number('valorLiquido',
-                                Input::old('valorLiquido'), array('class' =>'form-control','step'=>'any')) }}</div>
+                                0, array('class' =>'form-control','step'=>'any','min'=>'0')) }}</div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">{{ Form::label('valorPago', 'Valor
                                 Pago')}} {{ Form::number('valorPago',
-                                Input::old('valorPago'), array('class' =>'form-control','step'=>'any')) }}
+                                0, array('class' =>'form-control','step'=>'any','min'=>'0')) }}
                             </div>
                         </div>
                     </div>

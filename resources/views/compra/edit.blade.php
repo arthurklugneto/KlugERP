@@ -24,13 +24,13 @@
                         <div class="col-md-3">
                             <div class="form-group">{{ Form::label('quantidade', 'Quantidade')
                                 }} {{ Form::number('quantidade', Input::old('quantidade'),
-                                array('class' =>'form-control')) }}</div>
+                                array('class' =>'form-control','min'=>'0')) }}</div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">{{ Form::label('valor', 'Valor Unitário')
                                 }} {{ Form::number('valor', Input::old('valor'), array('class'
-                                =>'form-control','step'=>'any')) }}</div>
+                                =>'form-control','step'=>'any','min'=>'0')) }}</div>
                         </div>
 
                     </div>
