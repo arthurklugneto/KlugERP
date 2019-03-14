@@ -56,16 +56,16 @@
 									aberto
 								</span>
                             </td>
-							@elseif( $value->situacao == 'finalizada' )
+							@elseif( $value->situacao == 'finalizado' )
 							<td>
                                 <span class="m-badge m-badge--success m-badge--wide m-badge--rounded">
-									finalizada
+                                    finalizado
 								</span>
                             </td>
 							@else
 							<td>
                                 <span class="m-badge m-badge--warning m-badge--wide m-badge--rounded">
-									incompleta
+									recebido
 								</span>
                             </td>
 							@endif

@@ -2,47 +2,36 @@
 
 namespace App\Services;
 
-use App\ContaPagar;
-use App\ContaPagarFormaPagamento;
-use App\Fornecedor;
+use App\ContaReceber;
+use App\ContaReceberFormaPagamento;
+use App\Cliente;
 use App\FormaPagamento;
 use App\PlanoConta;
 use Carbon\Carbon;
 use DB;
 
-class ContaPagarService{
+class ContaReceberService{
 
     public function __construct(){}
 
     public function getAll(){
-        return ContaPagar::all();
+        return ContaReceber::all();
     }
 
     public function findById($id){
-        return ContaPagar::find($id);
+        return ContaReceber::find($id);
     }
 
-    public function remove($id){
-        $pagamentos = ContaPagarFormaPagamento::all()->where('conta_pagar_id', $id);
-    	foreach ($pagamentos as $key => $value)
-    	{
-    		$value->delete();
-    	}
-    	 
-    	$registro = ContaPagar::find($id);
-    	$registro->delete();
-    }
-
-    public function save($inputs){
-        $registro = new ContaPagar;
-    	 
-    	$registro->fornecedor_id = $inputs['fornecedor_id'];
+    public function store($inputs){
+        $registro = new ContaReceber;
+    	
+    	$registro->cliente_id = $inputs['cliente_id'];
     	$registro->plano_contas_id = $inputs['planoContas'];
     	$registro->valorOriginal = $inputs['valorOriginal'];
-    	 
+    	
     	if(!empty($inputs['valorLiquido'])) $registro->valorLiquido = $inputs['valorLiquido'];
     	if(!empty($inputs['valorRecebido'])) $registro->valorRecebido = $inputs['valorRecebido'];
-    	
+    
     	if( empty($inputs['dataEmissao']) )
     	{
     		$registro->dataEmissao = null;
@@ -51,7 +40,7 @@ class ContaPagarService{
     	{
     		$registro->dataEmissao = $inputs['dataEmissao'];
     	}
-    	 
+    	
     	if( empty($inputs['dataVencimento']) )
     	{
     		$registro->dataVencimento = null;
@@ -60,16 +49,16 @@ class ContaPagarService{
     	{
     		$registro->dataVencimento = $inputs['dataVencimento'];
     	}
-    	 
-    	if( empty($inputs['dataPagamento']) )
+    	
+    	if( empty($inputs['dataRecebimento']) )
     	{
-    		$registro->dataPagamento = null;
+    		$registro->dataRecebimento = null;
     	}
     	else
     	{
-    		$registro->dataPagamento = $inputs['dataPagamento'];
+    		$registro->dataRecebimento = $inputs['dataRecebimento'];
     	}
-    	 
+    	
     	//calcula valor liquido
     	if( empty($inputs['valorLiquido'] ))
     	{
@@ -87,53 +76,60 @@ class ContaPagarService{
     	{
     		$registro->valorLiquido = $inputs['valorLiquido'];
     	}
-    	 
+   	    	
     	$registro->descricao = $inputs['descricao'];
-    	 
         $registro->save();
         return $registro->id;
     }
 
-    public function update($inputs,$id){
+    public function remove($id){
+        $recebimentos = ContaReceberFormaPagamento::all()->where('conta_receber_id', $id);
+    	foreach ($recebimentos as $key => $value)
+    	{
+    		$value->delete();
+    	}
+    	
+    	$registro = ContaReceber::find($id);
+    	$registro->delete();
     }
-    
-    public function getFornecedores(){
-        return Fornecedor::pluck('nome','id');
+
+    public function getContaRecebimentos($id){
+        return ContaReceberFormaPagamento::all()->where('conta_receber_id', $id);
+    }
+
+    public function getClientes(){
+        return Cliente::pluck('nome','id');
     }
 
     public function getPlanoContas(){
-        return DB::table('plano_contas')->where('tipo', 'despesa')->pluck('nome','id');
+        return DB::table('plano_contas')->where('tipo', 'receita')->pluck('nome','id');
     }
 
     public function getFormasPagamento(){
         return FormaPagamento::pluck('nome','id');
     }
 
-    public function getContaPagamentos($id){
-        return ContaPagarFormaPagamento::all()->where('conta_pagar_id', $id);
-    }
-
-    public function addPagamento($inputs,$id){
-        $pagamento = new ContaPagarFormaPagamento;
+    public function addRecebimento($inputs,$id){
+        $pagamento = new ContaReceberFormaPagamento;
     	$pagamento->valor = $inputs['valorPagamento'];
     	$pagamento->forma_pagamentos_id = $inputs['formasPagamento'];
-    	$pagamento->conta_pagar_id = $id;
-    	 
+    	$pagamento->conta_receber_id = $id;
+    	
     	$pagamento->save();
-    	 
-    	$conta = ContaPagar::find($id);
-    	 
-    	$valorPago = $conta->valorPago;
-    	$valorPago += $inputs['valorPagamento'];
-    	 
-    	$conta->valorPago = $valorPago;
-    	$conta->dataPagamento = Carbon::now();
-    	 
-    	if( $conta->valorPago >= $conta->valorLiquido )
+    	
+    	$conta = ContaReceber::find($id);
+    	
+    	$valorRecebido = $conta->valorRecebido;
+    	$valorRecebido += $inputs['valorPagamento'];
+    	
+    	$conta->valorRecebido = $valorRecebido;
+    	$conta->dataRecebimento = Carbon::now();
+    	
+    	if( $conta->valorRecebido >= $conta->valorLiquido )
     	{
     		$conta->situacao = 2;
     	}
-    	elseif( $conta->valorPago > 0 && $conta->valorPago != 0 )
+    	elseif( $conta->valorRecebido > 0 && $conta->valorRecebido != 0 )
     	{
     		$conta->situacao = 3;
     	}
@@ -141,8 +137,8 @@ class ContaPagarService{
     	{
     		$conta->situacao = 1;
     	}
-    	 
+    	
     	$conta->save();
     }
-
+    
 }
