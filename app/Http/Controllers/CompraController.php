@@ -154,7 +154,20 @@ class CompraController extends Controller
         ->with('compra', $compra)
         ->with('formasPagamento', $formasPagamento)
         ->with('pagamentos', $pagamentos);
-	}
+    }
+    
+    public function removePagamento($id)
+    {
+        $idCompra = $this->compraService->removePagamento($id);
+        $compra = $this->compraService->findById($idCompra);                    
+        $pagamentos = $this->compraService->getEntradaPagamentos($idCompra);
+        $formasPagamento = $this->compraService->getFormaPagamentos();
+        
+        return View::make('compra.finalizar')
+        ->with('compra', $compra)
+        ->with('formasPagamento', $formasPagamento)
+        ->with('pagamentos', $pagamentos);
+    }
 	
 	public function destroy($id)
 	{

@@ -101,5 +101,18 @@ class ContasReceberController extends Controller
     	->with('formasPagamento', $formasPagamento)
     	->with('recebimentos', $pagamentos);
     }
+
+    public function removeRecebimento($id)
+    {
+        $idConta =  $this->contaReceberService->removeRecebimento($id);
+        $conta = $this->contaReceberService->findById($idConta);    	
+    	$pagamentos = $this->contaReceberService->getContaRecebimentos($idConta);
+    	$formasPagamento = $this->contaReceberService->getFormasPagamento();
+    	
+    	return View::make('contasReceber.edit')
+    	->with('contaReceber', $conta)
+    	->with('formasPagamento', $formasPagamento)
+    	->with('recebimentos', $pagamentos);
+    }
     
 }

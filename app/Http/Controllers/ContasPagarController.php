@@ -99,5 +99,18 @@ class ContasPagarController extends Controller
     	->with('formasPagamento', $formasPagamento)
     	->with('pagamentos', $pagamentos);
     }
+
+    public function removePagamento($id)
+    {
+        $idConta = $this->contaPagarService->removePagamento($id);
+        $pagamentos = $this->contaPagarService->getContaPagamentos($idConta);
+        $formasPagamento = $this->contaPagarService->getFormasPagamento();
+        $conta = $this->contaPagarService->findById($idConta);
+    	 
+    	return View::make('contasPagar.edit')
+    	->with('contaPagar', $conta)
+    	->with('formasPagamento', $formasPagamento)
+    	->with('pagamentos', $pagamentos);
+    }
     
 }

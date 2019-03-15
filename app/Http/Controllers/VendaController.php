@@ -150,8 +150,21 @@ class VendaController extends Controller
 		return View::make('venda.finalizar')
 		->with('venda', $venda)
 		->with('formasPagamento', $formasPagamento)
-		->with('pagamentos', $pagamentos);;
-	}
+		->with('pagamentos', $pagamentos);
+    }
+    
+    public function removePagamento($id)
+    {
+        $idConta = $this->vendaService->removePagamento($id);
+        $pagamentos = $this->vendaService->getSaidaPagamentos($idConta);
+        $formasPagamento = $this->vendaService->getFormaPagamentos();
+        $venda = $this->vendaService->findById($idConta);
+		
+		return View::make('venda.finalizar')
+		->with('venda', $venda)
+		->with('formasPagamento', $formasPagamento)
+		->with('pagamentos', $pagamentos);
+    }
 	
 	public function destroy($id)
 	{

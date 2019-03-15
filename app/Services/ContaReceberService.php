@@ -123,22 +123,42 @@ class ContaReceberService{
     	$valorRecebido += $inputs['valorPagamento'];
     	
     	$conta->valorRecebido = $valorRecebido;
-    	$conta->dataRecebimento = Carbon::now();
+        $conta->dataRecebimento = Carbon::now();
+        $conta->situacao = $this->adjustSitucao($conta->valorLiquido,$conta->valorRecebido);
     	
-    	if( $conta->valorRecebido >= $conta->valorLiquido )
+    	$conta->save();
+    }
+
+    public function removeRecebimento($id){
+        $idRetornar = $this->findContaIdByPagamentoId($id);
+
+        $pagamento = ContaReceberFormaPagamento::find($id);
+        $conta = ContaReceber::find($idRetornar);
+        $conta->valorRecebido -= $pagamento->valor;
+        $conta->situacao = $this->adjustSitucao($conta->valorLiquido,$conta->valorRecebido);
+        $conta->save();
+        $pagamento->delete();
+
+        return $idRetornar;
+    }
+
+    private function findContaIdByPagamentoId($id){
+        return ContaReceberFormaPagamento::find($id)->conta_receber_id;
+    }
+
+    private function adjustSitucao($valorLiquido,$valorPago){
+        if( $valorPago >= $valorLiquido )
     	{
-    		$conta->situacao = 2;
+    		return 2;
     	}
-    	elseif( $conta->valorRecebido > 0 && $conta->valorRecebido != 0 )
+    	elseif( $valorPago > 0 && $valorPago != 0 )
     	{
-    		$conta->situacao = 3;
+    		return 3;
     	}
     	else
     	{
-    		$conta->situacao = 1;
+    		return 1;
     	}
-    	
-    	$conta->save();
     }
     
 }

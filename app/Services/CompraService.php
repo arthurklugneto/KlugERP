@@ -159,15 +159,38 @@ class CompraService{
 		
 		$compra->valorPago = $valorPago;
 		
-		if( $compra->valorPago >= $compra->valor ){
-			$compra->situacao = 2;
-		}elseif( $compra->valorPago > 0 && $compra->valorPago != 0 ){
-			$compra->situacao = 3;
-		}else{
-			$compra->situacao = 1;
-		}
+		$compra->situacao = $this->adjustSitucao($compra->valor,$compra->valorPago);
 				
 		$compra->save();
+    }
+
+    public function removePagamento($id){
+        $idRetornar = $this->findContaIdByPagamentoId($id);
+
+        $pagamento = EntradaFormaPagamento::find($id);
+        $compra = Entrada::find($idRetornar);
+        $compra->valorPago -= $pagamento->valor;
+        $compra->situacao = $this->adjustSitucao($compra->valor,$compra->valorPago);
+        $compra->save();
+        $pagamento->delete();
+
+        return $idRetornar;
+    }
+
+    private function findContaIdByPagamentoId($id){
+        return EntradaFormaPagamento::find($id)->entrada_id;
+    }
+
+    private function adjustSitucao($valor,$valorPago){
+        $situacao = 1;
+        if( $valorPago >= $valor ){
+			$situacao = 2;
+		}elseif( $valorPago > 0 && $valorPago != 0 ){
+			$situacao = 3;
+		}else{
+			$situacao = 1;
+        }
+        return $situacao;
     }
 
 }
