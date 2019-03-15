@@ -104,6 +104,8 @@
                 <script>
                     $(document).ready(function() {
                         $.noConflict();
+                        var date = new Date();
+                        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                         var date = $('#dataEmissao,#dataVencimento,#dataRecebimento').datepicker({
                                 format: 'yyyy-mm-dd',
                                 todayHighlight: true,
@@ -111,6 +113,7 @@
                                 templates:{leftArrow:'<i class="la la-angle-left"></i>',
                                 rightArrow:'<i class="la la-angle-right"></i>'
                             }});
+                        $('#dataEmissao,#dataVencimento').datepicker( 'setDate', today );
                     });
                     </script>
                 </div>

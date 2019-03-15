@@ -48,6 +48,8 @@
 				Form::close() }}
                 <script>
                 $(document).ready(function() {
+                    var date = new Date();
+                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                     $.noConflict();
                     var date = $('#dataVenda').datepicker({
                             format: 'yyyy-mm-dd',
@@ -56,6 +58,7 @@
                             templates:{leftArrow:'<i class="la la-angle-left"></i>',
                             rightArrow:'<i class="la la-angle-right"></i>'
                         }});
+                    $('#dataVenda').datepicker( 'setDate', today );
                 });
                 </script>
                 </div>

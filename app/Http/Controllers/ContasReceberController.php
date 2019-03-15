@@ -42,8 +42,26 @@ class ContasReceberController extends Controller
 
     public function store(Request $request)
     {
-    	$id = $this->contaReceberService->store(Input::all());
-    	return Redirect::to('contasReceber/'.$id.'/edit');
+        $rules = array(
+            'dataEmissao'  => 'required',
+            'dataVencimento' => 'required',
+            'cliente_id' => 'required',
+            'valorOriginal' => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+			return Redirect::to('contasReceber/create')
+			->withErrors($validator);
+		} else {
+            if( Input::get('valorOriginal') != 0 )
+            {
+                $id = $this->contaReceberService->store(Input::all());
+    	        return Redirect::to('contasReceber/'.$id.'/edit'); 
+            }else{
+                return Redirect::to('contasReceber/create');
+            }         
+        }	      	
     }
 
     public function edit($id)
@@ -68,7 +86,11 @@ class ContasReceberController extends Controller
 
     public function addRecebimento($id)
     {
-        $this->contaReceberService->addRecebimento(Input::all(),$id);
+        if( !empty(Input::get('valorPagamento')) && Input::get('valorPagamento') != 0 )
+        {
+            $this->contaReceberService->addRecebimento(Input::all(),$id);
+        }
+
         $conta = $this->contaReceberService->findById($id);
     	
     	$pagamentos = $this->contaReceberService->getContaRecebimentos($id);

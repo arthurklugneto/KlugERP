@@ -44,8 +44,20 @@ class PedidoController extends Controller
 
     public function store(Request $request)
     {
-		$id = $this->pedidoService->save(Input::all());
-		return Redirect::to('pedido/'.$id.'/edit');
+        $rules = array(
+            'dataVenda'  => 'required',
+            'cliente_id' => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+			return Redirect::to('pedido/create')
+			->withErrors($validator);
+		} else {
+            $id = $this->pedidoService->save(Input::all());
+		    return Redirect::to('pedido/'.$id.'/edit');
+        }
+
     }
 
     public function edit($id)
@@ -79,7 +91,7 @@ class PedidoController extends Controller
 
     public function addItem($id)
 	{
-		$this->pedidoService->addItem(Input::all(),$id);
+        $this->pedidoService->addItem(Input::all(),$id);
 		
 		$produtos = $this->pedidoService->getProdutos();
         $pedidoProdutos = $this->pedidoService->getPedidoProdutos($id);
