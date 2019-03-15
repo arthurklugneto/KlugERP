@@ -26,6 +26,7 @@ Route::resource('fornecedor', 'FornecedorController');
 Route::resource('venda', 'VendaController');
 Route::post('/venda/{id}/edit', 'VendaController@addItem');
 Route::post('/venda/{id}/pagar', 'VendaController@addPagamento');
+Route::post('/venda/{id}/pagar', 'VendaController@removePagamento');
 Route::post('/venda/{id}/finalizar', 'VendaController@finalizarVenda');
 Route::post('/venda/{id}/removeItem', 'VendaController@removeItem');
 
@@ -40,6 +41,7 @@ Route::post('/pedido/{id}/removeItem', 'PedidoController@removeItem');
 Route::resource('compra', 'CompraController');
 Route::post('/compra/{id}/edit', 'CompraController@addItem');
 Route::post('/compra/{id}/pagar', 'CompraController@addPagamento');
+Route::post('/compra/{id}/pagar', 'CompraController@removePagamento');
 Route::post('/compra/{id}/finalizar', 'CompraController@finalizarCompra');
 Route::post('/compra/{id}/removeItem', 'CompraController@removeItem');
 
@@ -55,10 +57,12 @@ Route::resource('planoContas', 'PlanoContaController');
 // CONTAS A RECEBER
 Route::resource('contasReceber', 'ContasReceberController');
 Route::post('/contasReceber/{id}/receber', 'ContasReceberController@addRecebimento');
+Route::post('/contasReceber/{id}/receber', 'ContasReceberController@removeRecebimento');
 
 // CONTAS A PAGAR
 Route::resource('contasPagar', 'ContasPagarController');
 Route::post('/contasPagar/{id}/pagar', 'ContasPagarController@addPagamento');
+Route::post('/contasPagar/{id}/pagar', 'ContasPagarController@removePagamento');
 
 // ESTOQUE
 Route::resource('estoque', 'EstoqueController');
