@@ -159,20 +159,38 @@ class VendaService{
 		
 		$venda->valorRecebido = $valorPago;
 		
-		if( $venda->valorRecebido >= $venda->valor )
-		{
-			$venda->situacao = 2;
-		}
-		elseif( $venda->valorRecebido > 0 && $venda->valorRecebido != 0 )
-		{
-			$venda->situacao = 3;
-		}
-		else
-		{
-			$venda->situacao = 1;
-		}
+		$venda->situacao = $this->adjustSitucao($venda->valor,$venda->valorRecebido);
 		
         $venda->save();
+    }
+
+    public function removePagamento($id){
+        $idRetornar = $this->findContaIdByPagamentoId($id);
+
+        $pagamento = SaidaFormaPagamento::find($id);
+        $venda = Saida::find($idRetornar);
+        $venda->valorRecebido -= $pagamento->valor;
+        $venda->situacao = $this->adjustSitucao($venda->valor,$venda->valorRecebido);
+        $venda->save();
+        $pagamento->delete();
+
+        return $idRetornar;
+    }
+
+    private function findContaIdByPagamentoId($id){
+        return SaidaFormaPagamento::find($id)->saida_id;
+    }
+
+    private function adjustSitucao($valor,$valorPago){
+        $situacao = 1;
+        if( $valorPago >= $valor ){
+			$situacao = 2;
+		}elseif( $valorPago > 0 && $valorPago != 0 ){
+			$situacao = 3;
+		}else{
+			$situacao = 1;
+        }
+        return $situacao;
     }
 
 }

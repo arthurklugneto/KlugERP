@@ -39,15 +39,19 @@
 									<tr>
 										<th>Forma de Pagamento</th>
 										<th>Valor</th>
+                                        <th></th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($recebimentos as $key => $value)
 									<tr>
-
 										<td>{{ $value->formaPagamento->nome }}</td>
 										<td>{{ $value->valor }}</td>
-
+                                        <td>
+                                        {{ Form::open(array('url' => 'contasReceber/'.$value->id.'/removeRecebimento')) }}
+                                            {{ Form::submit('Apagar', array('class' => 'btn	btn-sm btn-danger')) }} 
+                                        {{ Form::close() }}
+                                        </td>
 									</tr>
 									@endforeach
 								</tbody>

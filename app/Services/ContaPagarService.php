@@ -127,22 +127,41 @@ class ContaPagarService{
     	$valorPago += $inputs['valorPagamento'];
     	 
     	$conta->valorPago = $valorPago;
-    	$conta->dataPagamento = Carbon::now();
+    	$conta->dataPagamento = Carbon::now();	 
+    	$conta->situacao = $this->adjustSitucao($conta->valorLiquido,$conta->valorPago);
     	 
-    	if( $conta->valorPago >= $conta->valorLiquido )
+    	$conta->save();
+    }
+
+    public function removePagamento($id){
+        $idRetornar = $this->findContaIdByPagamentoId($id);
+
+        $pagamento = ContaPagarFormaPagamento::find($id);
+        $conta = ContaPagar::find($idRetornar);
+        $conta->valorPago -= $pagamento->valor;
+        $conta->situacao = $this->adjustSitucao($conta->valorLiquido,$conta->valorPago);
+        $conta->save();
+        $pagamento->delete();
+        return $idRetornar;
+    }
+
+    private function findContaIdByPagamentoId($id){
+        return ContaPagarFormaPagamento::find($id)->conta_pagar_id;
+    }
+
+    private function adjustSitucao($valorLiquido,$valorPago){
+        if( $valorPago >= $valorLiquido )
     	{
-    		$conta->situacao = 2;
+    		return 2;
     	}
-    	elseif( $conta->valorPago > 0 && $conta->valorPago != 0 )
+    	elseif( $valorPago > 0 && $valorPago != 0 )
     	{
-    		$conta->situacao = 3;
+    		return 3;
     	}
     	else
     	{
-    		$conta->situacao = 1;
+    		return 1;
     	}
-    	 
-    	$conta->save();
     }
 
 }
