@@ -40,8 +40,19 @@ class VendaController extends Controller
 	
 	public function store()
 	{
-		$id = $this->vendaService->save(Input::all());
+        $rules = array(
+            'dataVenda'       => 'required',
+            'cliente_id' => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+			return Redirect::to('venda/create')
+			->withErrors($validator);
+		} else {
+            $id = $this->vendaService->save(Input::all());
 		return Redirect::to('venda/'.$id.'/edit');
+        }		
 	}
 	
 	public function edit($id)
@@ -59,8 +70,14 @@ class VendaController extends Controller
 	
 	public function addItem($id)
 	{
-		
-		$this->vendaService->addItem(Input::all(),$id);
+		$rules = array(
+            'produtos'       => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if (!$validator->fails()){
+            $this->vendaService->addItem(Input::all(),$id);
+        }
 		
 		$produtos = $this->vendaService->getProdutos();
         $vendasProdutos = $this->vendaService->getSaidaProdutos($id);
@@ -71,8 +88,7 @@ class VendaController extends Controller
 		->with('produtos', $produtos)
 		->with('venda', $venda)
 		->with('vendasProdutos', $vendasProdutos)
-		->with('produtoAtual', $produtoVenda);
-		
+		->with('produtoAtual', $produtoVenda);		
 	}
 
 	public function removeItem($id)
@@ -122,9 +138,11 @@ class VendaController extends Controller
 	
 	public function addPagamento($id)
 	{
-		
-		$this->vendaService->adicionarPagamento(Input::all(),$id);
-		
+		if(!empty(Input::get('valorPagamento')))
+        {
+            $this->vendaService->adicionarPagamento(Input::all(),$id);            
+        }
+        
 		$pagamentos = $this->vendaService->getSaidaPagamentos($id);
         $formasPagamento = $this->vendaService->getFormaPagamentos();
         $venda = $this->vendaService->findById($id);
