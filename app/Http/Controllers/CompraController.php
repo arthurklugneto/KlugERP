@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\CompraService;
 use Validator;
 use View;
+use Route;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
@@ -41,8 +42,20 @@ class CompraController extends Controller
 	
 	public function store()
 	{
-		$id = $this->compraService->save(Input::all());
-		return Redirect::to('compra/'.$id.'/edit');
+        $rules = array(
+            'dataCompra'       => 'required',
+            'fornecedor_id' => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+			return Redirect::to('compra/create')
+			->withErrors($validator);
+		} else {
+            $id = $this->compraService->save(Input::all());
+            return Redirect::to('compra/'.$id.'/edit');
+        }
+        
 	}
 	
 	public function edit($id)
@@ -59,18 +72,27 @@ class CompraController extends Controller
 	
 	public function addItem($id)
 	{
-		$this->compraService->addItem(Input::all(),$id);
+        $rules = array(
+            'produtos'       => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
 
-		$produtos = $this->compraService->getProdutos();
-        $comprasProdutos = $this->compraService->getEntradaProdutos($id);
-        $compra = $this->compraService->findById($id);
-        $produtoCompra = $this->compraService->getProduto(Input::get('produtos'));
-		
-		return View::make('compra.edit')
-		->with('produtos', $produtos)
-		->with('compra', $compra)
-		->with('comprasProdutos', $comprasProdutos)
-		->with('produtoAtual', $produtoCompra);
+        if (!$validator->fails()){
+            $this->compraService->addItem(Input::all(),$id);
+
+            $produtos = $this->compraService->getProdutos();
+            $comprasProdutos = $this->compraService->getEntradaProdutos($id);
+            $compra = $this->compraService->findById($id);
+            $produtoCompra = $this->compraService->getProduto(Input::get('produtos'));
+            
+            return View::make('compra.edit')
+            ->with('produtos', $produtos)
+            ->with('compra', $compra)
+            ->with('comprasProdutos', $comprasProdutos)
+            ->with('produtoAtual', $produtoCompra);
+        }else{
+            return Redirect::to('compra/'.$id.'/edit'); 
+        }
 	}
 	
 	public function removeItem($id)
@@ -118,16 +140,20 @@ class CompraController extends Controller
 	
 	public function addPagamento($id)
 	{
-        $this->compraService->adicionarPagamento(Input::all(),$id);
+        if(!empty(Input::get('valorPagamento')))
+        {
+            $this->compraService->adicionarPagamento(Input::all(),$id);            
+        }
+
         $compra = $this->compraService->findById($id);
-				
-		$pagamentos = $this->compraService->getEntradaPagamentos($id);
-		$formasPagamento = $this->compraService->getFormaPagamentos();
-		
-		return View::make('compra.finalizar')
-		->with('compra', $compra)
-		->with('formasPagamento', $formasPagamento)
-		->with('pagamentos', $pagamentos);
+                    
+        $pagamentos = $this->compraService->getEntradaPagamentos($id);
+        $formasPagamento = $this->compraService->getFormaPagamentos();
+        
+        return View::make('compra.finalizar')
+        ->with('compra', $compra)
+        ->with('formasPagamento', $formasPagamento)
+        ->with('pagamentos', $pagamentos);
 	}
 	
 	public function destroy($id)

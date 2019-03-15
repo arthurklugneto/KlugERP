@@ -42,8 +42,27 @@ class ContasPagarController extends Controller
 
     public function store(Request $request)
     {
-    	$id = $this->contaPagarService->save(Input::all());
-    	return Redirect::to('contasPagar/'.$id.'/edit');
+        $rules = array(
+            'dataEmissao'  => 'required',
+            'dataVencimento' => 'required',
+            'fornecedor_id' => 'required',
+            'valorOriginal' => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+			return Redirect::to('contasPagar/create')
+			->withErrors($validator);
+		} else {
+            if( Input::get('valorOriginal') != 0 )
+            {
+                $id = $this->contaPagarService->save(Input::all());
+                return Redirect::to('contasPagar/'.$id.'/edit');
+            }else{
+                return Redirect::to('contasPagar/create');
+            }         
+        }	
+
     }
 
     public function edit($id)
@@ -66,7 +85,10 @@ class ContasPagarController extends Controller
     
     public function addPagamento($id)
     {
-    	$this->contaPagarService->addPagamento(Input::all(),$id);
+        if( !empty(Input::get('valorPagamento')) && Input::get('valorPagamento') != 0 )
+        {
+            $this->contaPagarService->addPagamento(Input::all(),$id); 
+        }
     	 
     	$pagamentos = $this->contaPagarService->getContaPagamentos($id);
         $formasPagamento = $this->contaPagarService->getFormasPagamento();

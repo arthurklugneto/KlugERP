@@ -18,6 +18,9 @@
                     </div>
                 </div>
                 <div class="m-portlet__body">
+                <div class="row">
+                    <div class="col-md-12">{{ Html::ul($errors->all()) }}</div>
+                </div>
                 {{ Form::open(array('url' => 'compra')) }}
 				<div class="row">
 					<div class="col-md-8">
@@ -42,6 +45,8 @@
 
                 <script>
                 $(document).ready(function() {
+                    var date = new Date();
+                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                     $.noConflict();
                     var date = $('#dataCompra').datepicker({
                             format: 'yyyy-mm-dd',
@@ -50,6 +55,7 @@
                             templates:{leftArrow:'<i class="la la-angle-left"></i>',
                             rightArrow:'<i class="la la-angle-right"></i>'
                         }});
+                        $('#dataCompra').datepicker( 'setDate', today );
                 });
                 </script>
 
